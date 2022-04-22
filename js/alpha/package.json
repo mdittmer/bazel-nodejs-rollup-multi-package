@@ -1,0 +1,24 @@
+{
+  "name": "alpha",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "config": {
+    "out_dir": "out"
+  },
+  "scripts": {
+    "rollup:cjs": "rollup --config rollup.config.js",
+    "package:cjs": "${npm_execpath} run rollup:cjs && echo \"#!/usr/bin/env node\" > ./${npm_package_config_out_dir}/${npm_package_name}.bin.js && cat ./${npm_package_config_out_dir}/${npm_package_name}.cjs.js >> ./${npm_package_config_out_dir}/${npm_package_name}.bin.js && chmod u+x ./${npm_package_config_out_dir}/${npm_package_name}.bin.js",
+    "install": "${npm_execpath} run package:cjs",
+    "clean": "rm -rf ./${npm_package_config_out_dir}"
+  },
+  "bin": "./out/alpha.bin.js",
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@bazel/rollup": "^5.4.0",
+    "@rollup/plugin-commonjs": "^21.1.0",
+    "@rollup/plugin-node-resolve": "^13.2.1",
+    "rollup": "^2.70.2"
+  }
+}

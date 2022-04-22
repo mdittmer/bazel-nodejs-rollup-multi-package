@@ -1,0 +1,10 @@
+load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+
+# TODO: Is there no way to do this with a relative path?
+load("//js/alpha/node_modules/@bazel/rollup:index.bzl", "rollup_bundle")
+
+rollup_bundle(
+    name = "alpha",
+    srcs = ["index.js"],
+    entry_point = "index.js",
+)
