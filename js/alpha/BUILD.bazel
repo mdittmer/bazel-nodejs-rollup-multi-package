@@ -1,10 +1,33 @@
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@npm//@bazel/rollup:index.bzl", "rollup_bundle")
 
-# TODO: Is there no way to do this with a relative path?
-load("//js/alpha/node_modules/@bazel/rollup:index.bzl", "rollup_bundle")
+filegroup(
+    name = "rollup_config",
+    srcs = [
+        "rollup.config.js",
+    ],
+)
 
 rollup_bundle(
-    name = "alpha",
-    srcs = ["index.js"],
+    # Note: Automatically determined output file name: [name].js.
+    name = "bundle.cjs",
+
     entry_point = "index.js",
+    srcs = [
+        "index.js",
+    ],
+    config_file = "rollup.config.js",
+    deps = [
+        ":rollup_config",
+        "@npm//@rollup/plugin-node-resolve",
+        "@npm//@rollup/plugin-commonjs",
+    ],
+)
+
+genrule(
+    name = "bundle.bin",
+    srcs = [ "bundle.cjs.js" ],
+    # deps = [  ":bundle.cjs" ],
+    outs = [ "bundle.bin.js" ],
+    output_to_bindir = True,
+    cmd = "echo \"#!/usr/bin/env node\" > $@ && cat $(location bundle.cjs.js) >> $@ && chmod u+x $@",
 )
